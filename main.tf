@@ -4,9 +4,10 @@ locals {
   }
 }
 
+
 module "db" {
-  source                                 = "terraform-aws-modules/rds/aws"
-  version                                = "6.1.0"
+  source  = "terraform-aws-modules/rds/aws"
+  version = "6.1.0"
   identifier                             = format("%s-%s", var.environment, var.rds_instance_name)
   db_name                                = var.db_name
   password                               = var.custom_user_password != "" ? var.custom_user_password : var.manage_master_user_password ? null : length(random_password.master) > 0 ? random_password.master[0].result : null
@@ -155,7 +156,7 @@ resource "aws_secretsmanager_secret" "secret_master_db" {
 }
 
 resource "random_password" "master" {
-  count   = var.manage_master_user_password ? 0 : var.custom_user_password == "" ? 1 : 0
+  count   = var.manage_master_user_password ? 1 : var.custom_user_password == "" ? 1 : 0
   length  = var.random_password_length
   special = false
 }
@@ -166,12 +167,13 @@ resource "aws_secretsmanager_secret_version" "rds_credentials" {
   secret_string = <<EOF
 {
   "username": "${module.db.db_instance_username}",
-  "password": length(random_password.master) > 0 ? element(random_password.master, 0).result : var.custom_password,
+  "password": "${length(random_password.master) > 0 ? element(random_password.master, 0).result : var.custom_user_password}",
   "engine": "${var.engine}",
   "host": "${module.db.db_instance_endpoint}"
 }
 EOF
 }
+
 
 # Cloudwatch alarms
 resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
@@ -311,3 +313,4 @@ resource "aws_lambda_permission" "sns_lambda_slack_invoke" {
   principal     = "sns.amazonaws.com"
   source_arn    = aws_sns_topic.slack_topic[0].arn
 }
+

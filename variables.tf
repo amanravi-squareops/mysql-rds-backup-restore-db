@@ -309,3 +309,128 @@ variable "custom_user_password" {
   default     = ""
   type        = string
 }
+
+variable "db_identifier" {
+  description = "fetch latest snapshot"
+  default     = ""
+  type        = string
+}
+variable "create_new_database" {
+  description = "check db already created or not"
+  type        = bool
+  default     = false
+}
+
+variable "username" {
+  description = "user for create restore"
+  default     = ""
+  type        = string
+}
+variable "instance_class_new" {
+  default = "value"
+  type    = string
+}
+
+
+variable "identifier" {
+  default     = ""
+  description = "identifier for db"
+  type        = string
+}
+
+variable "create_rds" {
+  description = "Flag to control whether to create the RDS instance"
+  type        = bool
+  default     = false
+}
+
+variable "db_instance_identifier" {
+  description = "The identifier for the RDS instance"
+  type        = string
+}
+
+
+variable "db_subnet_group_name" {
+  description = "The name of the DB subnet group"
+  type        = string
+}
+
+
+variable "vpc_security_group_ids" {
+  description = "List of security group IDs for the RDS instance"
+  type        = list(string)
+}
+
+variable "create_namespace" {
+  type        = string
+  description = "Specify whether or not to create the namespace if it does not already exist. Set it to true to create the namespace."
+  default     = true
+}
+
+variable "namespace" {
+  type        = string
+  default     = "mysqldb"
+  description = "Name of the Kubernetes namespace where the MYSQL deployment will be deployed."
+}
+variable "bucket_provider_type" {
+  type        = string
+  default     = "gcs"
+  description = "Choose what type of provider you want (s3, gcs)"
+}
+variable "azure_storage_account_name" {
+  description = "Azure storage account name"
+  type        = string
+  default     = ""
+}
+
+variable "azure_storage_account_key" {
+  description = "Azure storage account key"
+  type        = string
+  default     = ""
+}
+
+variable "azure_container_name" {
+  description = "Azure container name"
+  type        = string
+  default     = ""
+}
+
+variable "iam_role_arn_backup" {
+  description = "IAM role ARN for backup (AWS)"
+  type        = string
+  default     = ""
+}
+variable "service_account_backup" {
+  description = "Service account for backup (GCP)"
+  type        = string
+  default     = ""
+}
+variable "mysqldb_custom_credentials_config" {
+  type = any
+  default = {
+    root_user            = ""
+    root_password        = ""
+  }
+  description = "Specify the configuration settings for MySQL to pass custom credentials during creation"
+}
+variable "mysqldb_backup_config" {
+  type = map(string)
+  default = {
+    bucket_uri           = ""
+    s3_bucket_region     = ""
+    cron_for_full_backup = ""
+    mysql_database_name  = ""
+    db_endpoint=""
+  }
+  description = "configuration options for MySQL database backups. It includes properties such as the S3 bucket URI, the S3 bucket region, and the cron expression for full backups."
+}
+
+variable "mysqldb_backup_enabled" {
+  type        = bool
+  default     = false
+  description = "Specifies whether to enable backups for MySQL database."
+}
+
+# variable "initial_db_sql" {
+#   type = list(string)
+# }
