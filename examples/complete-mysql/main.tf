@@ -159,7 +159,7 @@ module "backup_restore" {
     db_endpoint          = replace(module.rds-mysql.db_instance_endpoint, ":3306", "")
   }
 
-  mysqldb_restore_enabled = true
+  mysqldb_restore_enabled = false
   mysqldb_permission      = local.mysqldb_permission
   mysqldb_restore_config = {
     db_endpoint      = replace(module.rds-mysql.db_instance_endpoint, ":3306", "")
